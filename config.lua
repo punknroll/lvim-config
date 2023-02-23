@@ -10,9 +10,9 @@ vim.opt.relativenumber = true
 -- general
 lvim.log.level = "info"
 lvim.format_on_save = {
-    enabled = true,
-    --  pattern = "*.lua",
-    timeout = 1000,
+  enabled = true,
+  --  pattern = "*.lua",
+  timeout = 1000,
 }
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
@@ -73,22 +73,22 @@ lvim.builtin.treesitter.auto_install = true
 -- -- linters and formatters <https://www.lunarvim.org/docs/languages#lintingformatting>
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-    -- { name = "phpcsfixer",
+  -- { name = "phpcsfixer",
 
-    --     --    extra_args = { "--allow-risky=yes" },
-    --     filetypes = { "php" },
-    -- },
-    {
-        command = "prettier_eslint",
-        filetypes = { "vue" },
-    },
+  --     --    extra_args = { "--allow-risky=yes" },
+  --     filetypes = { "php" },
+  -- },
+  -- {
+  --     command = "prettier_eslint",
+  --     filetypes = { "vue" },
+  -- },
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-    {
-        command = "eslint",
-        filetypes = { "javascript", "vue" }
-    }
+  {
+    command = "eslint",
+    filetypes = { "javascript", "vue" }
+  }
 }
 
 -- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>
@@ -99,28 +99,29 @@ linters.setup {
 --     },
 --}
 lvim.plugins = {
-    { "lunarvim/colorschemes" },
-    { "gpanders/editorconfig.nvim" },
-    {
-        "simrat39/symbols-outline.nvim",
-        config = function()
-            require('symbols-outline').setup()
-        end
-    },
-    -- automatically install all the formatters and linters specified by the following
-    -- config options:
-    -- * linters.setup
-    -- * formatters.setup
-    { "jayp0521/mason-null-ls.nvim",
-        config = function()
-            require("mason-null-ls").setup({
-                automatic_installation = false,
-                automatic_setup = true,
-                ensure_installed = nil,
-            })
-            require("mason-null-ls").setup_handlers()
-        end,
-    }
+  { "lunarvim/colorschemes" },
+  { "gpanders/editorconfig.nvim" },
+  { "lervag/vimtex" },
+  {
+    "simrat39/symbols-outline.nvim",
+    config = function()
+      require('symbols-outline').setup()
+    end
+  },
+  -- automatically install all the formatters and linters specified by the following
+  -- config options:
+  -- * linters.setup
+  -- * formatters.setup
+  { "jayp0521/mason-null-ls.nvim",
+    config = function()
+      require("mason-null-ls").setup({
+        automatic_installation = false,
+        automatic_setup = true,
+        ensure_installed = nil,
+      })
+      require("mason-null-ls").setup_handlers()
+    end,
+  }
 }
 
 require("lvim.lsp.manager").setup("phpactor")
@@ -128,21 +129,21 @@ require("lvim.lsp.manager").setup("phpactor")
 local dap = require('dap')
 
 dap.adapters.php = {
-    type = "executable",
-    command = "node",
-    args = { os.getenv("HOME") .. "/vscode-php-debug/out/phpDebug.js" }
+  type = "executable",
+  command = "node",
+  args = { os.getenv("HOME") .. "/vscode-php-debug/out/phpDebug.js" }
 }
 
 dap.configurations.php = {
-    {
-        type = "php",
-        request = "launch",
-        name = "Listen for Xdebug",
-        port = 9003,
-        pathMappings = {
-            ["/var/www/html"] = "${workspaceFolder}"
-        },
-    }
+  {
+    type = "php",
+    request = "launch",
+    name = "Listen for Xdebug",
+    port = 9003,
+    pathMappings = {
+      ["/var/www/html"] = "${workspaceFolder}"
+    },
+  }
 }
 
 -- -- Autocommands (`:help autocmd`) <https://neovim.io/doc/user/autocmd.html>
@@ -153,3 +154,82 @@ dap.configurations.php = {
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+--
+--
+-- prettier-eslint
+-- optional: set your prefered indent with size
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+
+-- load required null-ls references
+local h = require("null-ls.helpers")
+local cmd_resolver = require("null-ls.helpers.command_resolver")
+local methods = require("null-ls.methods")
+local u = require("null-ls.utils")
+local FORMATTING = methods.internal.FORMATTING
+
+-- Define the new javascript formatter
+local pe = h.make_builtin({
+  name = "prettier_eslint",
+  meta = {
+    url = "https://github.com/prettier/prettier-eslint-cli",
+    description = "Eslint + Prettier",
+  },
+  method = FORMATTING,
+  filetypes = {
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "jsx"
+  },
+  factory = h.formatter_factory,
+  generator_opts = {
+    command = "prettier-eslint",
+    args = { "--stdin", "--parser", "babel", "--resolve-plugins-relative-to", "~/.nvm/versions/node/v16.16.0/lib" },
+    to_stdin = true,
+  },
+})
+
+-- optional: Define a second formatter for JSON
+local pejson = h.make_builtin({
+  name = "prettier_eslint_json",
+  meta = {
+    url = "https://github.com/prettier/prettier-eslint-cli",
+    description = "Eslint + Prettier",
+  },
+  method = FORMATTING,
+  filetypes = {
+    "json",
+    "cjson",
+  },
+  factory = h.formatter_factory,
+  generator_opts = {
+    command = "prettier-eslint",
+    args = { "--stdin", "--parser", "json" },
+    to_stdin = true,
+  },
+})
+
+-- Enable the the defined formatters
+-- if you are using vanilla NeoVim + null-ls please
+-- read how to install/enable on
+-- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/CONFIG.md
+local nls = require("null-ls")
+nls.setup {
+  on_attach = require("lvim.lsp").common_on_attach,
+  sources = {
+    pe,
+    pejson
+  }
+}
+
+-- optional: LunarVim related step. Here we enable eslint as linter for Javascript.
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  {
+    command = "eslint",
+    filetypes = { "javascript" }
+  }
+}
