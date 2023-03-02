@@ -74,8 +74,6 @@ lvim.builtin.treesitter.auto_install = true
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   -- { name = "phpcsfixer",
-
-<<<<<<< HEAD
   --     --    extra_args = { "--allow-risky=yes" },
   --     filetypes = { "php" },
   -- },
@@ -83,15 +81,6 @@ formatters.setup {
     command = "prettier_eslint",
     filetypes = { "javascript", "vue" },
   },
-=======
-    --     --    extra_args = { "--allow-risky=yes" },
-    --     filetypes = { "php" },
-    -- },
-    -- {
-    --     command = "prettier_eslint",
-    --     filetypes = { "vue" },
-    -- },
->>>>>>> 2e9a022e419fa6a8e9d3167b5589208ab959ee3e
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
@@ -109,7 +98,6 @@ linters.setup {
 --     },
 --}
 lvim.plugins = {
-<<<<<<< HEAD
   { "lunarvim/colorschemes" },
   { "gpanders/editorconfig.nvim" },
   { "lervag/vimtex" },
@@ -133,31 +121,6 @@ lvim.plugins = {
       require("mason-null-ls").setup_handlers()
     end,
   }
-=======
-    { "lunarvim/colorschemes" },
-    { "gpanders/editorconfig.nvim" },
-    { "lervag/vimtex" },
-    {
-        "simrat39/symbols-outline.nvim",
-        config = function()
-            require('symbols-outline').setup()
-        end
-    },
-    -- automatically install all the formatters and linters specified by the following
-    -- config options:
-    -- * linters.setup
-    -- * formatters.setup
-    { "jayp0521/mason-null-ls.nvim",
-        config = function()
-            require("mason-null-ls").setup({
-                automatic_installation = false,
-                automatic_setup = true,
-                ensure_installed = nil,
-            })
-            require("mason-null-ls").setup_handlers()
-        end,
-    }
->>>>>>> 2e9a022e419fa6a8e9d3167b5589208ab959ee3e
 }
 
 require("lvim.lsp.manager").setup("phpactor")
