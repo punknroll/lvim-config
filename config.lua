@@ -5,14 +5,14 @@
 -- vim options
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
-vim.opt.relativenumber = true
+--vim.opt.relativenumber = true
 
 -- general
 lvim.log.level = "info"
 lvim.format_on_save = {
-    enabled = true,
-    --  pattern = "*.lua",
-    timeout = 1000,
+  enabled = true,
+  --  pattern = "*.lua",
+  timeout = 1000,
 }
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
@@ -73,22 +73,22 @@ lvim.builtin.treesitter.auto_install = true
 -- -- linters and formatters <https://www.lunarvim.org/docs/languages#lintingformatting>
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-    -- { name = "phpcsfixer",
+  -- { name = "phpcsfixer",
 
-    --     --    extra_args = { "--allow-risky=yes" },
-    --     filetypes = { "php" },
-    -- },
-    {
-        command = "prettier_eslint",
-        filetypes = { "vue" },
-    },
+  --     --    extra_args = { "--allow-risky=yes" },
+  --     filetypes = { "php" },
+  -- },
+  {
+    command = "prettier_eslint",
+    filetypes = { "javascript", "vue" },
+  },
 }
 local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
-    {
-        command = "eslint",
-        filetypes = { "javascript", "vue" }
-    }
+  {
+    command = "eslint",
+    filetypes = { "javascript", "vue" }
+  }
 }
 
 -- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>
@@ -99,28 +99,29 @@ linters.setup {
 --     },
 --}
 lvim.plugins = {
-    { "lunarvim/colorschemes" },
-    { "gpanders/editorconfig.nvim" },
-    {
-        "simrat39/symbols-outline.nvim",
-        config = function()
-            require('symbols-outline').setup()
-        end
-    },
-    -- automatically install all the formatters and linters specified by the following
-    -- config options:
-    -- * linters.setup
-    -- * formatters.setup
-    { "jayp0521/mason-null-ls.nvim",
-        config = function()
-            require("mason-null-ls").setup({
-                automatic_installation = false,
-                automatic_setup = true,
-                ensure_installed = nil,
-            })
-            require("mason-null-ls").setup_handlers()
-        end,
-    }
+  { "lunarvim/colorschemes" },
+  { "gpanders/editorconfig.nvim" },
+  { "lervag/vimtex" },
+  {
+    "simrat39/symbols-outline.nvim",
+    config = function()
+      require('symbols-outline').setup()
+    end
+  },
+  -- automatically install all the formatters and linters specified by the following
+  -- config options:
+  -- * linters.setup
+  -- * formatters.setup
+  { "jayp0521/mason-null-ls.nvim",
+    config = function()
+      require("mason-null-ls").setup({
+        automatic_installation = false,
+        automatic_setup = true,
+        ensure_installed = nil,
+      })
+      require("mason-null-ls").setup_handlers()
+    end,
+  }
 }
 
 require("lvim.lsp.manager").setup("phpactor")
@@ -128,21 +129,21 @@ require("lvim.lsp.manager").setup("phpactor")
 local dap = require('dap')
 
 dap.adapters.php = {
-    type = "executable",
-    command = "node",
-    args = { os.getenv("HOME") .. "/vscode-php-debug/out/phpDebug.js" }
+  type = "executable",
+  command = "node",
+  args = { os.getenv("HOME") .. "/vscode-php-debug/out/phpDebug.js" }
 }
 
 dap.configurations.php = {
-    {
-        type = "php",
-        request = "launch",
-        name = "Listen for Xdebug",
-        port = 9003,
-        pathMappings = {
-            ["/var/www/html"] = "${workspaceFolder}"
-        },
-    }
+  {
+    type = "php",
+    request = "launch",
+    name = "Listen for Xdebug",
+    port = 9003,
+    pathMappings = {
+      ["/var/www/html"] = "${workspaceFolder}"
+    },
+  }
 }
 
 -- -- Autocommands (`:help autocmd`) <https://neovim.io/doc/user/autocmd.html>
@@ -153,3 +154,13 @@ dap.configurations.php = {
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+--
+--
+-- prettier-eslint
+-- https://betterprogramming.pub/auto-formatting-javascript-source-code-on-neovim-with-prettier-and-elint-4795457c71e8
+-- ATTENTION: Install command pretter-eslint locally first:
+-- npm add --location=global prettier-eslint-cli
+-- optioral: set your prefered indent with size
+-- if pretter_eslint is missing in the local null-ls-plugin download it manually from
+-- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/lua/null-ls/builtins/formatting/prettier_eslint.lua
+-- or find a way to update the null-ls-plugin
